@@ -1,111 +1,176 @@
-
 function initMap() {
+  
+  // Instantiate a directions service.
+  
+  // Create a map and center it on Manhattan.
   const map = new google.maps.Map(document.getElementById("map"), {
-    mapTypeControl: false,
-    center: { lat: 45.45, lng: 20.65 },
-    zoom: 10,    
+    zoom: 13,
+    center: { lat: 40.771, lng: -73.974 },
   });
-  new AutocompleteDirectionsHandler(map);
+  
+  const ps = new ParserSender(map);
+  ps.sendPathToServer();
 }
 
 
-class AutocompleteDirectionsHandler {
+
+class ParserSender {
   constructor(map) {
-    this.map = map;
-    this.geocoder = new google.maps.Geocoder();
-    this.stepDisplay = new google.maps.InfoWindow();
-    this.originPlaceId = "";
-    this.destinationPlaceId = "";
-    this.travelMode = google.maps.TravelMode.DRIVING;
     this.directionsService = new google.maps.DirectionsService();
-    this.directionsRenderer = new google.maps.DirectionsRenderer();
-    this.directionsRenderer.setMap(map);
-    
-    
-    const originInput = document.getElementById("origin-input");
-    const destinationInput = document.getElementById("destination-input");
-    const modeSelector = document.getElementById("mode-selector");        
-    
-    const originAutocomplete = new google.maps.places.Autocomplete(originInput);
-    // Specify just the place data fields that you need.
-    originAutocomplete.setFields(["place_id"]);
-    const destinationAutocomplete = new google.maps.places.Autocomplete(
-      destinationInput
-    );
-    // Specify just the place data fields that you need.
-    destinationAutocomplete.setFields(["place_id"]);
-    this.setupClickListener(
-      "changemode-walking",
-      google.maps.TravelMode.WALKING
-    );
-    this.setupClickListener(
-      "changemode-transit",
-      google.maps.TravelMode.TRANSIT
-    );
-    this.setupClickListener(
-      "changemode-driving",
-      google.maps.TravelMode.DRIVING
-    );
-    this.setupPlaceChangedListener(originAutocomplete, "ORIG");
-    this.setupPlaceChangedListener(destinationAutocomplete, "DEST");
-    this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(originInput);
-    this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(
-      destinationInput
-    );
-    this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(modeSelector);
-  }
-  // Sets a listener on a radio button to change the filter type on Places
-  // Autocomplete.
-  setupClickListener(id, mode) {
-    const radioButton = document.getElementById(id);
-    radioButton.addEventListener("click", () => {
-      this.travelMode = mode;
-      this.route();
-    });
-  }
-  setupPlaceChangedListener(autocomplete, mode) {
-    autocomplete.bindTo("bounds", this.map);
-    autocomplete.addListener("place_changed", () => {
-      const place = autocomplete.getPlace();
+    this.map = map;
+    this.markerArray = [];
+    this.cities = new Set()
+    this.directionsRenderer = new google.maps.DirectionsRenderer({ map: map });    
+    this.stepDisplay = new google.maps.InfoWindow();
+    this.geocoder = new google.maps.Geocoder();
+    this.infoWindow = new google.maps.InfoWindow();
+    this.xhttp = new XMLHttpRequest();
+  }  
 
-      if (!place.place_id) {
-        window.alert("Please select an option from the dropdown list.");
-        return;
-      }
-
-      if (mode === "ORIG") {
-        this.originPlaceId = place.place_id;
-      } else {
-        this.destinationPlaceId = place.place_id;
-      }
-      this.route();
-    });
-  }
- 
-  route() {
-    if (!this.originPlaceId || !this.destinationPlaceId) {
-      return;
+  calculateAndDisplayRoute(
+    directionsRenderer,
+    directionsService,
+    markerArray,
+    stepDisplay,
+    map
+  ) {
+    // First, remove any existing markers from the map.
+    for (let i = 0; i < markerArray.length; i++) {
+      markerArray[i].setMap(null);
     }
-    const me = this;
-    this.directionsService.route(
+    // Retrieve the start and end locations and create a DirectionsRequest using
+    // WALKING directions.
+    directionsService.route(
       {
-        origin: { placeId: this.originPlaceId },
-        destination: { placeId: this.destinationPlaceId },
-        travelMode: this.travelMode
+        origin: document.getElementById("start").value,
+        destination: document.getElementById("end").value,
+        travelMode: google.maps.TravelMode.WALKING,
       },
-      (response, status) => {
-        
-        if (status === "OK") {   
-          const myRoute = response.routes[0].legs[0].steps;
-          
-            for (let i = 0; i < myRoute.length; i++) {
-              console.log( myRoute[i].end_location.formatted_address )
-            }          
-          me.directionsRenderer.setDirections(response);
+      (result, status) => {
+        // Route the directions and pass the response to a function to create
+        // markers for each step.
+        if (status === "OK" && result) {
+          document.getElementById("warnings-panel").innerHTML =
+            "<b>" + result.routes[0].warnings + "</b>";
+          directionsRenderer.setDirections(result);
+          this.showSteps(result, markerArray, stepDisplay, map);
         } else {
           window.alert("Directions request failed due to " + status);
         }
       }
-    );    
-  }  
+    );
+  }
+
+
+  geocodeLatLng(geocoder, map, infowindow, latlng) {  
+    geocoder.geocode({ location: latlng }, (results, status) => {
+      if (status === "OK") {
+        if (results[0]) {
+          map.setZoom(11);
+          const marker = new google.maps.Marker({
+            position: latlng,
+            map: map,
+          });
+          const city = results[0].formatted_address.split(",", 3)[1];
+          infowindow.setContent(city);
+          infowindow.open(map, marker);
+          console.log(city);
+          this.cities.add(city);
+          // console.log(results[0].formatted_address);
+          // console.log(results[0].formatted_address.split(",", 3));
+        } else {
+          window.alert("No results found");
+        }
+      } else {
+        window.alert("Geocoder failed due to: " + status);
+      }
+    });
+  }
+
+
+  showSteps(directionResult, markerArray, infoWindow, map) {
+    // For each step, place a marker, and add the text to the marker's infowindow.
+    // Also attach the marker to an array so we can keep track of it and remove it
+    // when calculating new routes.
+    const myRoute = directionResult.routes[0].legs[0];
+
+    for (let i = 0; i < myRoute.steps.length; i++) {
+      const marker = (markerArray[i] =
+        markerArray[i] || new google.maps.Marker());
+      marker.setMap(map);
+
+      const start_pos = myRoute.steps[i].start_location;        
+      marker.setPosition(start_pos);
+
+      
+      // stepDisplay.open(map, marker);    
+      this.wrap(marker, infoWindow, map, start_pos);
+
+    }
+
+  }
+
+  wrap(marker, stepDisplay, map, start_pos) {        
+    
+    // geocodeLatLng(geocoder, map, stepDisplay, start_pos);
+    
+    google.maps.event.addListener(marker, "click", () => {
+      this.geocodeLatLng(this.geocoder, map, stepDisplay, start_pos);
+      // Open an info window when the marker is clicked on, containing the text
+      // of the step.    
+      // this.geocodeLatLng(geocoder, map, stepDisplay, start_pos);
+        // stepDisplay.setContent(marker.formatted_address);
+        // stepDisplay.open(map, marker);
+    });    
+  }
+
+  sendPathToServer() {
+    document.getElementById("submit").addEventListener("click", () => {
+      this.calculateAndDisplayRoute(
+        this.directionsRenderer,
+        this.directionsService,
+        this.markerArray,
+        this.stepDisplay,
+        this.map
+      );
+    });
+  }
+
+  /*
+  sendPathToServer() {
+
+    // Display the route between the initial start and end selections.
+    
+    this.calculateAndDisplayRoute(
+      this.directionsRenderer,
+      this.directionsService,
+      this.markerArray,
+      this.stepDisplay,
+      this.map
+    );
+      
+    // Listen to change events from the start and end lists.
+    
+    this.onChangeHandler = function () {
+      calculateAndDisplayRoute(
+        this.directionsRenderer,
+        this.directionsService,
+        this.markerArray,
+        this.stepDisplay,
+        this.map
+      );
+    };
+    
+    // document.getElementById("start").addEventListener("change", onChangeHandler);
+    // document.getElementById("end").addEventListener("change", onChangeHandler);
+    
+    
+    document.getElementById("submit").addEventListener("click", () => {
+        geocodeLatLng(geocode, map, infoWindow);
+    });
+    
+    
+    document.getElementById("submit").addEventListener("click", this.onChangeHandler);
+  }
+*/
 }
