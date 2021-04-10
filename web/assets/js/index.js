@@ -1,3 +1,11 @@
+const socket = io();
+
+const getMail = document.getElementById("getMail");
+getMail.addEventListener('click', (e) => {
+data = 5;
+                      socket.emit('getMails', data);
+                
+})
 function initMap() {
   
   // Instantiate a directions service.

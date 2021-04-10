@@ -42,7 +42,7 @@ def scrapSite(urls, searchInput):
         results = soup.body.find_all(string=r, recursive=True)
 
         print(results)
-        dangerIndex = dangerIndex + len(results) * 50;
+        dangerIndex = dangerIndex + len(results) * 50
 
         for s in results:
             s = s.lower()
@@ -97,25 +97,25 @@ def googleSearch(searchInput):
 
 # ------------------------
 if __name__ == "__main__":
-    ''' Zakomentarisano zbog testiranja
+
     if len(sys.argv) == 1:
         print("Fali argument!")
         exit()
-    '''
+    
 
     argv = sys.argv
-    # cityName = argv[1:]
+    cityName = argv[1]
     # cityName = "Pančevo"
     # cityName = "Beograd"
     # cityName = "Novi Sad"
-    # cityName = "Niš"
+    #cityName = "Niš"
     # cityName = "Vranje"
-    cityName = "Kragujev"
-    cityName = "Jagodin"
+    #cityName = "Kragujev"
+    #cityName = "Jagodin"
     # cityName = "Kruševac"
 
-    searchInput = "" + cityName
-
+    searchInput = "" + str(cityName)
+    print(searchInput)
     googleSearch(searchInput)
 
 '''
