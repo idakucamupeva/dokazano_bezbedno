@@ -9,7 +9,8 @@
 		<title>Dokazano bezbedno</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>						
+		<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>		
+		<link rel="icon" href="images/logo-final.png">				
 		<link rel="stylesheet" href="assets/css/main.css" />		
 		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>		
 		<script src="assets/js/autocomplete.js"></script>
@@ -19,9 +20,10 @@
 		<!-- Sidebar -->
 			<section id="sidebar">
 				<div class="inner">
+					<h1><a href="/"><img alt="neDokazani" src="images/logo-final.png" id="logo"></a></h1>
 					<nav>
 						<ul>
-							<li><a href="#intro">Dobrodosli</a></li>
+							<li><a href="#intro">Dobrodošli</a></li>
 							<li><a href="#one">Aplikacija</a></li>							
 							<li><a href="#three">Kontakt</a></li>
 						</ul>
@@ -36,36 +38,27 @@
 					<section id="intro" class="wrapper style1 fullscreen fade-up">
 						<div class="inner">
 							<h1>DOKAZANO BEZBEDNA PUTANJA</h1>
+							<h2>IZBEGNI RIZIČNA PODRUČJA</h2>
 							<div id="right-panel">
-								<input id="origin-place"
-								class="controls"
-								type="text"
-								placeholder="Pretraga..."
-								/>								
-								<ul id="results"></ul>
 							</div>
 							  <script
 								src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD4CJU8Dcc92I4xQ2KEx_zVLtAVZLoJEpc&callback=initService&libraries=places&v=weekly"
 								async></script>
 								
 								
-							<ul class="action">
-								<li><a href="#one" class="button scrolly">IZBEGNI OPASNOST</a></li>
-							</ul>
+								<ul class="actions" style="padding-top: 25px;">
+									<li><a href="generic.html" class="button" target="_blank">Izebegni opasnost</a></li>
+								</ul>
 						</div>
 					</section>
 
 				<!-- One -->
 					<section id="one" class="wrapper style2 spotlights">
 						<section>
-							<a href="#" class="image"><img src="images/route1.jpg" alt="" data-position="center center" /></a>
+							<a href="#" class="image"><img src="images/route1.jpg" alt="road" data-position="center center" style="min-width: 100%;" /></a>
 							<div class="content">
-								<div class="inner">
-									<h2>Nudimo ti najbezbedniju rutu</h2>
-								
-									<ul class="actions">
-										<li><a href="generic.html" class="button">Otkrij mogucnosti</a></li>
-									</ul>
+								<div class="inner" id="textHed">
+									<h2>Nudimo ti najbezbedniju rutu</h2>							
 								</div>
 							</div>
 						</section>
@@ -101,8 +94,15 @@
 									</form>
 								</section>
 								<section>
-										<li>
-											<h3>Pronadji nas</h3>
+										
+											<h3>Kontaktiraj nas</h3>
+											
+												<h4 class="trd-office-title"><i class="fa fa-envelope"></i>  Email</h4>
+												<ul>
+													<li class="trd-office-email"><a href="mailto: info@manoter.com"><span>dokazano.bezbedno@gmail.com</span></a></li>
+												</ul>
+				
+										
 											<ul class="icons">
 												<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
 												<li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
