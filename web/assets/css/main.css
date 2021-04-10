@@ -116,7 +116,7 @@ input, select, textarea {
 
 	body, input, select, textarea {
 		color: rgba(255, 255, 255, 0.55);
-		font-family: Arial, Helvetica, sans-serif;
+		font-family: "Montserrat", Arial, Helvetica, sans-serif;
 		font-size: 16.5pt;
 		font-weight: normal;
 		line-height: 1.75;
@@ -151,7 +151,6 @@ input, select, textarea {
 		-webkit-transition: color 0.2s ease, border-bottom-color 0.2s ease;
 		-ms-transition: color 0.2s ease, border-bottom-color 0.2s ease;
 		transition: color 0.2s ease, border-bottom-color 0.2s ease;
-		border-bottom: dotted 1px rgba(255, 255, 255, 0.35);
 		color: inherit;
 		text-decoration: none;
 	}
@@ -285,7 +284,7 @@ input, select, textarea {
 		background: rgba(255, 255, 255, 0.05);
 		border-radius: 0.25em;
 		border: solid 1px rgba(255, 255, 255, 0.15);
-		font-family: "Courier New", monospace;
+		font-family: "Montserrat", "Courier New", monospace;
 		font-size: 0.9em;
 		margin: 0 0.25em;
 		padding: 0.25em 0.65em;
@@ -293,7 +292,7 @@ input, select, textarea {
 
 	pre {
 		-webkit-overflow-scrolling: touch;
-		font-family: "Courier New", monospace;
+		font-family: "Montserrat", "Courier New", monospace;
 		font-size: 0.9em;
 		margin: 0 0 2em 0;
 	}
@@ -2419,7 +2418,7 @@ input, select, textarea {
 				text-rendering: auto;
 				line-height: 1;
 				text-transform: none !important;
-				font-family: 'Font Awesome 5 Free';
+				font-family: "Montserrat", 'Font Awesome 5 Free';
 				font-weight: 900;
 			}
 
@@ -2499,7 +2498,7 @@ input, select, textarea {
 			text-rendering: auto;
 			line-height: 1;
 			text-transform: none !important;
-			font-family: 'Font Awesome 5 Free';
+			font-family: "Montserrat", 'Font Awesome 5 Free';
 			font-weight: 400;
 		}
 
@@ -2516,7 +2515,7 @@ input, select, textarea {
 		}
 
 		.icon.brands:before {
-			font-family: 'Font Awesome 5 Brands';
+			font-family: "Montserrat", 'Font Awesome 5 Brands';
 		}
 
 		.icon.major {
@@ -3940,7 +3939,7 @@ box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 #origin-input,
 #destination-input {
 background-color: #fff;
-font-family: Roboto;
+font-family: "Montserrat", Roboto;
 color: rgba(0, 0, 0, 0.5);
 font-size: 15px;
 font-weight: 300;
@@ -3963,13 +3962,13 @@ padding: 5px 11px 0px 11px;
 }
 
 #mode-selector label {
-font-family: Roboto;
+font-family: "Montserrat", Roboto;
 font-size: 13px;
 font-weight: 300;
 }
 
 #right-panel {
-	font-family: "Roboto", "sans-serif";
+	font-family: "Montserrat", "Roboto", "sans-serif";
 	line-height: 30px;
 	padding-left: 10px;
 }
@@ -3985,4 +3984,30 @@ width: 100%;
 
 #right-panel i {
 font-size: 12px;
+}
+
+
+#logo {
+	width: 160px;
+	height: 160px;
+
+}
+
+@media screen and (max-width: 1280px) {
+
+	#logo {
+		width: 40px;
+		height: 40px;
+		padding-right: 5px;
+	
+	}
+
+}
+
+
+@media screen and (min-width: 980px) {
+	#textHed{
+		position: absolute; 
+		left: 450px;
+	}
 }
