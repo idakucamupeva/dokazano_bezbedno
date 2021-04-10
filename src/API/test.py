@@ -31,43 +31,6 @@ def scrapSite(urls, searchInput):
 
 
 
-        '''
-        emails.update(new_emails)
-
-        soup = BeautifulSoup(response.text, 'lxml')
-
-        for anchor in soup.find_all("a"):
-            if "href" in anchor.attrs:
-                link = anchor.attrs["href"]
-            else:
-                link = ''
-
-                if link.startswith('/'):
-                    link = base_url + link
-
-                elif not link.startswith('http'):
-                    link = path + link
-
-                if not link.endswith(".gz"):
-                    if not link in unscraped and not link in scraped:
-                        unscraped.append(link)
-
-
-
-    # df = pd.DataFrame(emails, columns=["Email"]).
-    # emails.add("info@ekologija.gov.rs");
-    # print(df["Email"][0])
-    vector_emails = []
-    for e in emails:
-        # print(e)
-        vector_emails.append(e)
-
-    vector_emails.append("info@ekologija.gov.rs")
-
-    for e in vector_emails:
-        print(e)
-    '''
-
 
 
 
