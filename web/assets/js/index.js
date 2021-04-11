@@ -10,6 +10,8 @@ data = 5;
 socket.on("done",(data) => {
 console.log(data["nesto"]);
 //console.log(data[0]);
+document.getElementById("resenje").innerHTML = "<p>" + data["nesto"] + "</p>";
+
 })
 function initMap() {
   
