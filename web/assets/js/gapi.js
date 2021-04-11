@@ -155,7 +155,14 @@ class AutocompleteDirectionsHandler {
           socket.emit('getCities', cities_copy);
  
           socket.on("done",(send_data) => {
-            console.log(send_data);            
+            const lines = send_data.split('\n');
+              
+              document.getElementById("panel").innerHTML = "<ul>\n";
+              for(var i = 0; i < lines.length; i++)
+              {                
+                document.getElementById("panel").innerHTML += ("<li>" + lines[i] + "</li>\n");
+              }
+              document.getElementById("panel").innerHTML += "</ul>";         
           });
           this.cities = [];
 
