@@ -33,13 +33,10 @@ def scrapSite(searchInput):
         url = unscraped.popleft()
         scraped.add(url)
 
-        print("Crawling URL %s" % url)
         try:
             response = requests.get(url)
-            print("Successful request!")
             # print(response.text)      # html format
         except (requests.exceptions.MissingSchema, requests.exceptions.ConnectionError):
-            print("Unsuccessful request!")
             continue
 
         soup = bs4.BeautifulSoup(response.text, 'html.parser')
@@ -55,7 +52,7 @@ def scrapSite(searchInput):
         results = soup.body.find_all(string=r, recursive=True)
         #print(results)
 
-        dangerIndex = dangerIndex + len(results) * 50;
+        dangerIndex = dangerIndex + len(results) * 50
 
         for s in results:
             s = s.lower()
@@ -67,7 +64,6 @@ def scrapSite(searchInput):
 
             dangerIndex = dangerIndex + fire * 30 + flood * 50 + war * 100 + virus * 10 + eq * 30
 
-        print(dangerIndex)
 
     #print("************************")
     #print(searchInput + str(dangerIndex))
@@ -96,9 +92,7 @@ if __name__ == "__main__":
         allDangerIndices.append(tmpDangerIndex)
 
     for i in range(len(allDangerIndices)):
-        print("\n")
         print(allCities[i] + " : " + str(allDangerIndices[i]))
-        print("\n")
 
 
 

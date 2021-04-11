@@ -6,6 +6,11 @@ data = 5;
                       socket.emit('getMails', data);
                 
 })
+
+socket.on("done",(data) => {
+console.log(data["nesto"]);
+//console.log(data[0]);
+})
 function initMap() {
   
   // Instantiate a directions service.
