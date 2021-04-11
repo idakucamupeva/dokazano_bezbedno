@@ -1,14 +1,8 @@
-from googlesearch import search
 import sys
 import re
 import requests
-from urllib.parse import urlsplit
 from collections import deque
-from bs4 import BeautifulSoup
 import bs4
-import pandas as pd
-import string
-
 
 def scrapSite(searchInput):
     urls = [
@@ -20,9 +14,8 @@ def scrapSite(searchInput):
 
         # ----------------------------------------------------------Regioni
         'https://akv.org.rs/category/vanredno-stanje/?script=lat',
-        # 'https://www.juznevesti.com/Tagovi/vanredno-stanje.sr.html',
         'http://www.rtvsumadija.com/tag/vanredno-stanje/'
-
+         #'https://www.juznevesti.com/Tagovi/vanredno-stanje.sr.html',
     ]
 
     unscraped = deque(urls)
@@ -33,10 +26,13 @@ def scrapSite(searchInput):
         url = unscraped.popleft()
         scraped.add(url)
 
+        #print("Crawling URL %s" % url)
         try:
             response = requests.get(url)
-            # print(response.text)      # html format
+            #print("Successful request!")
+            #print(response.text)       # html format
         except (requests.exceptions.MissingSchema, requests.exceptions.ConnectionError):
+            print("Unsuccessful request!")
             continue
 
         soup = bs4.BeautifulSoup(response.text, 'html.parser')
@@ -50,9 +46,7 @@ def scrapSite(searchInput):
             rf"{searchInput}", flags=re.I | re.X)
 
         results = soup.body.find_all(string=r, recursive=True)
-        #print(results)
-
-        dangerIndex = dangerIndex + len(results) * 50
+        dangerIndex = dangerIndex + len(results) * 50;
 
         for s in results:
             s = s.lower()
@@ -64,11 +58,7 @@ def scrapSite(searchInput):
 
             dangerIndex = dangerIndex + fire * 30 + flood * 50 + war * 100 + virus * 10 + eq * 30
 
-
-    #print("************************")
-    #print(searchInput + str(dangerIndex))
-    #print("************************")
-    # return (searchInput, dangerIndex)
+        #print(dangerIndex)
 
     # requiredWords = r.findall(response.text)
     # print("\n----->URL: ", url)
@@ -78,18 +68,24 @@ def scrapSite(searchInput):
 
 # ------------------------
 if __name__ == "__main__":
-    if len(sys.argv) == 5:
-        print("Fali argument!")
+    if len(sys.argv) == 1:
+        print("Fale argumenti!")
         exit()
-
-    argv = sys.argv
 
     allCities = sys.argv[1:]
     allDangerIndices = []
     for city in  allCities:
         searchInput = "" + city
+
+        # The only city in Serbia that is translated into English
+        if searchInput == "Belgrade":
+            searchInput = "Beograd"
+
         tmpDangerIndex = scrapSite(searchInput)
         allDangerIndices.append(tmpDangerIndex)
+
+    # print(sys.argv)
+    # print("Broj gradova: ",  str(len(sys.argv)-1))
 
     for i in range(len(allDangerIndices)):
         print(allCities[i] + " : " + str(allDangerIndices[i]))
@@ -99,9 +95,7 @@ if __name__ == "__main__":
 
 
 
-
-
-    # cityName = argv[1:]
+    # Tests
     # cityName = "Pančevo"
     #cityName = "Beograd"
     # cityName = "Novi Sad"
@@ -112,17 +106,3 @@ if __name__ == "__main__":
     # cityName = "Kruševac"
     #cityName = "Paraćin"
     #cityName = "Ćuprija"
-
-'''
-Beograd  250
-Nis      200
-Pancevo  50
-Krusevac 50
-Vranje   50
-Kragujevac 50
-Jagodina  0
-Novi Sad 0
-Cuprija  0 
-Paracin  0
-
-'''
