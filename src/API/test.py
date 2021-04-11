@@ -10,16 +10,29 @@ import pandas as pd
 import string
 
 
-def scrapSite(urls, searchInput):
+def scrapSite(searchInput):
+    urls = [
+        # ----------------------------------------------------------Portali
+        'https://www.blic.rs/vanredno-stanje',
+        'https://rs.n1info.com/tag/vanredno-stanje/',
+        'https://nova.rs/tag/vanredno-stanje/'
+        'https://www.juznevesti.com/Tagovi/vanredno-stanje.sr.html'
+
+        # ----------------------------------------------------------Regioni
+        'https://akv.org.rs/category/vanredno-stanje/?script=lat',
+        # 'https://www.juznevesti.com/Tagovi/vanredno-stanje.sr.html',
+        'http://www.rtvsumadija.com/tag/vanredno-stanje/'
+
+    ]
+
     unscraped = deque(urls)
     scraped = set()
-
     dangerIndex = 0
+
     while len(unscraped):
         url = unscraped.popleft()
         scraped.add(url)
 
-        # test = 'https://www.blic.rs/vanredno-stanje'
         print("Crawling URL %s" % url)
         try:
             response = requests.get(url)
@@ -36,13 +49,13 @@ def scrapSite(urls, searchInput):
         #    flags=re.I | re.X)
         # r = re.compile(rf"^.*?{searchInput}.*?\bvanredno stanje\b.*?\bpožar\b.*?\bzemljotres\b.*?\bpoplava\b.*?\brat\b.*?\bepidemija\b.*?\bpandemija\b.*?\bprirodna katastrofa\b.*?$", flags= re.I | re.X)
         # r = re.compile(rf".*?{searchInput}.*?(\bvanredno stanje\b).*?", flags= re.I | re.X)
-
         r = re.compile(
             rf"{searchInput}", flags=re.I | re.X)
-        results = soup.body.find_all(string=r, recursive=True)
 
-        print(results)
-        dangerIndex = dangerIndex + len(results) * 50
+        results = soup.body.find_all(string=r, recursive=True)
+        #print(results)
+
+        dangerIndex = dangerIndex + len(results) * 50;
 
         for s in results:
             s = s.lower()
@@ -56,67 +69,55 @@ def scrapSite(urls, searchInput):
 
         print(dangerIndex)
 
-    print("************************")
-    print(searchInput + str(dangerIndex))
-    print("************************")
+    #print("************************")
+    #print(searchInput + str(dangerIndex))
+    #print("************************")
     # return (searchInput, dangerIndex)
 
     # requiredWords = r.findall(response.text)
     # print("\n----->URL: ", url)
     # for x in requiredWords:
     #    print(x)
-
-
-# -----------------------------
-def googleSearch(searchInput):
-    '''
-    searchResult = search(searchInput, num_results=4)  # 5 links
-    for l in searchResult:
-        print(l);
-    #scrapSite(searchResult[0])
-    #scrapSite(searchResult[1])
-    '''
-
-    searchResult = [
-        # ----------------------------------------------------------Portali
-        'https://www.blic.rs/vanredno-stanje',
-        'https://rs.n1info.com/tag/vanredno-stanje/',
-        'https://nova.rs/tag/vanredno-stanje/'
-        'https://www.juznevesti.com/Tagovi/vanredno-stanje.sr.html'
-
-        # ----------------------------------------------------------Regioni
-        'https://akv.org.rs/category/vanredno-stanje/?script=lat',
-        # 'https://www.juznevesti.com/Tagovi/vanredno-stanje.sr.html',
-        'http://www.rtvsumadija.com/tag/vanredno-stanje/'
-
-    ]
-
-    #           links         cityName
-    scrapSite(searchResult, searchInput)
-
+    return dangerIndex
 
 # ------------------------
 if __name__ == "__main__":
-
-    if len(sys.argv) == 1:
+    if len(sys.argv) == 5:
         print("Fali argument!")
         exit()
-    
 
     argv = sys.argv
-    cityName = argv[1]
+
+    allCities = sys.argv[1:]
+    allDangerIndices = []
+    for city in  allCities:
+        searchInput = "" + city
+        tmpDangerIndex = scrapSite(searchInput)
+        allDangerIndices.append(tmpDangerIndex)
+
+    for i in range(len(allDangerIndices)):
+        print("\n")
+        print(allCities[i] + " : " + str(allDangerIndices[i]))
+        print("\n")
+
+
+
+
+
+
+
+
+    # cityName = argv[1:]
     # cityName = "Pančevo"
-    # cityName = "Beograd"
+    #cityName = "Beograd"
     # cityName = "Novi Sad"
-    #cityName = "Niš"
+    # cityName = "Niš"
     # cityName = "Vranje"
     #cityName = "Kragujev"
     #cityName = "Jagodin"
     # cityName = "Kruševac"
-
-    searchInput = "" + str(cityName)
-    print(searchInput)
-    googleSearch(searchInput)
+    #cityName = "Paraćin"
+    #cityName = "Ćuprija"
 
 '''
 Beograd  250
@@ -127,5 +128,7 @@ Vranje   50
 Kragujevac 50
 Jagodina  0
 Novi Sad 0
+Cuprija  0 
+Paracin  0
 
 '''
