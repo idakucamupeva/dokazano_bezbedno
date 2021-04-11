@@ -40,7 +40,7 @@ function getCity(step) {
               && Math.abs( data[i].lng - step.start_point.lng()) < 0.08)
               {
                   // console.log(data[i].city);
-                  return data[i].city;
+                  return data[i].city.split(' ').join('_');
               }                      
   }
   return "";
