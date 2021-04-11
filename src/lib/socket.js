@@ -4,7 +4,7 @@ class Socket {
         this.io = require('socket.io')(server);
 
         this.io.on('connection', socket => { 
-            console.log("WOW hama");                                  
+            console.log("connected");                                  
             socket.on('disconnect', () => {
                 console.log('diconnect');
             })   
