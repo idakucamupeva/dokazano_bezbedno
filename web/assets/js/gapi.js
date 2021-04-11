@@ -1,9 +1,13 @@
 const socket = io();
 socket.on("done",(data) => {
-  console.log(data["nesto"]);
-  //console.log(data[0]);
-  document.getElementById("resenje").innerHTML = "<p>" + data["nesto"] + "</p>";
-  
+  const lines = data["nesto"].split(')');
+              
+  document.getElementById("panel").innerHTML = "<ul style='padding-left:10px; font-size:15px;'>\n";
+  for(var i = 0; i < lines.length; i++)
+  {                
+    document.getElementById("panel").innerHTML += ("<li>" + lines[i] + "</li>\n");
+  }
+  document.getElementById("panel").innerHTML += "</ul>";    
   })
 function sendData(send_cities) {
   const socket = io();
@@ -155,9 +159,10 @@ class AutocompleteDirectionsHandler {
           socket.emit('getCities', cities_copy);
  
           socket.on("done",(send_data) => {
-            const lines = send_data.split('\n');
+            const lines = send_data["nesto"].split('\n');
               
-              document.getElementById("panel").innerHTML = "<ul>\n";
+              document.getElementById("panel").innerHTML = '<ul id="ispis">\n';
+              document.getElementById("ispis").fontSize = "200px";
               for(var i = 0; i < lines.length; i++)
               {                
                 document.getElementById("panel").innerHTML += ("<li>" + lines[i] + "</li>\n");

@@ -46,7 +46,7 @@ def scrapSite(searchInput):
             rf"{searchInput}", flags=re.I | re.X)
 
         results = soup.body.find_all(string=r, recursive=True)
-        dangerIndex = dangerIndex + len(results) * 50;
+        dangerIndex = dangerIndex + len(results) * 50
 
         for s in results:
             s = s.lower()
@@ -86,10 +86,16 @@ if __name__ == "__main__":
 
     # print(sys.argv)
     # print("Broj gradova: ",  str(len(sys.argv)-1))
-
+    bezbedno = " je potpuno BEZBEDAN"
+    srednje = " je prohodan uz dodatni OPREZ"
+    uzas = " treba IZBEGAVATI"
     for i in range(len(allDangerIndices)):
-        print(allCities[i] + " : " + str(allDangerIndices[i]))
-
+        if(allDangerIndices[i]<50):
+            print("Grad " + allCities[i] + bezbedno + '(' + str(allDangerIndices[i]) + ')')
+        elif(allDangerIndices[i] >= 50 and allDangerIndices[i]<200):
+            print("Grad " + allCities[i] + srednje + '(' + str(allDangerIndices[i]) + ')')
+        else:
+            print("Grad " + allCities[i] + uzas + '(' + str(allDangerIndices[i]) + ')')
 
 
 
