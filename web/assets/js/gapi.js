@@ -1,3 +1,5 @@
+
+
 function initMap() {
   const map = new google.maps.Map(document.getElementById("map"), {
     mapTypeControl: false,
@@ -6,6 +8,19 @@ function initMap() {
   });
   new AutocompleteDirectionsHandler(map);
 }
+
+function getCity(step) {
+  for(var i = 0; i < data.length; i++) {            
+    if(Math.abs( data[i].lat - step.start_point.lat()) < 0.08 
+              && Math.abs( data[i].lng - step.start_point.lng()) < 0.08)
+              {
+                  // console.log(data[i].city);
+                  return data[i].city;
+              }                      
+  }
+  return "";
+}
+
 
 class AutocompleteDirectionsHandler {
   constructor(map) {
@@ -16,6 +31,8 @@ class AutocompleteDirectionsHandler {
     this.directionsService = new google.maps.DirectionsService();
     this.directionsRenderer = new google.maps.DirectionsRenderer();
     this.directionsRenderer.setMap(map);
+    // this.cityData = JSON.parse(data);
+    this.cities = []
     const originInput = document.getElementById("origin-input");
     const destinationInput = document.getElementById("destination-input");
     const modeSelector = document.getElementById("mode-selector");
@@ -87,13 +104,30 @@ class AutocompleteDirectionsHandler {
       },
       (response, status) => {
         if (status === "OK") {
+          const myRoute = response.routes[0].legs[0].steps;
           const res = response;
-          console.log(res);
+          
+          // console.log(myRoute)
+          // console.log(myRoute.start_location.lat());
+          for(var i = 0; i < myRoute.length; i++) {
+            var cityStep = getCity(myRoute[i]);
+            if (cityStep.localeCompare("") != 0 && !this.cities.includes(cityStep)) {
+              // console.log(cityStep);
+              this.cities.push(cityStep);
+            }
+          }
+
+          // console.log(res);
+          console.log("CITIES: ");
+          console.log(this.cities);
+          this.cities = [];
           me.directionsRenderer.setDirections(response);
         } else {
           window.alert("Directions request failed due to " + status);
         }
-      }
+      }      
     );
+
+        
   }
 }
