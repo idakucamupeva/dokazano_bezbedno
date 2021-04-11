@@ -12,7 +12,7 @@ class Socket {
 
                 console.log(send_cities);
                 
-                const program = "python C:\\Users\\djordje\\LocalProjects\\Hackaton\\dokazano_bezbedno\\src\\API\\test.py " + send_cities.join(' ');
+                const program = "python3 /home/mihailo/Documents/FON_HAKTON/dokazano_bezbedno/src/API/test.py " + send_cities.join(' ');
                 console.log(program);
                 
                 var child = require('child_process').exec(program);

@@ -1,5 +1,10 @@
-// const socket = io();
-
+const socket = io();
+socket.on("done",(data) => {
+  console.log(data["nesto"]);
+  //console.log(data[0]);
+  document.getElementById("resenje").innerHTML = "<p>" + data["nesto"] + "</p>";
+  
+  })
 function sendData(send_cities) {
   const socket = io();
 
@@ -145,7 +150,7 @@ class AutocompleteDirectionsHandler {
 
           const cities_copy = this.cities;
           
-          const socket = io();
+          //const socket = io();
           // sendData(this.cities);
           socket.emit('getCities', cities_copy);
  
