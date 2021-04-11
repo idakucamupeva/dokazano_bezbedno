@@ -1,3 +1,4 @@
+/*
 const socket = io();
 
 const getMail = document.getElementById("getMail");
@@ -13,6 +14,10 @@ console.log(data["nesto"]);
 document.getElementById("resenje").innerHTML = "<p>" + data["nesto"] + "</p>";
 
 })
+*/
+
+
+
 function initMap() {
   
   // Instantiate a directions service.

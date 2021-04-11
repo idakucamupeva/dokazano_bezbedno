@@ -1,4 +1,24 @@
+// const socket = io();
 
+function sendData(send_cities) {
+  const socket = io();
+
+  /*
+  const getMail = document.getElementById("getMail");
+  getMail.addEventListener('click', (e) => {
+  data = 5;
+                        socket.emit('getMails', data);
+                  
+  });
+  */
+
+  socket.emit('getCities', send_cities);
+ 
+  socket.on("done",(send_data) => {
+  console.log(send_data["nesto"]);
+  });
+  
+}
 
 function initMap() {
   const map = new google.maps.Map(document.getElementById("map"), {
@@ -120,8 +140,20 @@ class AutocompleteDirectionsHandler {
           // console.log(res);
           console.log("CITIES: ");
           console.log(this.cities);
-          this.cities = [];
+          
           me.directionsRenderer.setDirections(response);
+
+          const cities_copy = this.cities;
+          
+          const socket = io();
+          // sendData(this.cities);
+          socket.emit('getCities', cities_copy);
+ 
+          socket.on("done",(send_data) => {
+            console.log(send_data);            
+          });
+          this.cities = [];
+
         } else {
           window.alert("Directions request failed due to " + status);
         }

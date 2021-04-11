@@ -8,11 +8,14 @@ class Socket {
             socket.on('disconnect', () => {
                 console.log('diconnect');
             })   
-            socket.on('getMails', (data) => {
-                const program = "python3 /home/mihailo/Documents/FON_HAKTON/dokazano_bezbedno/src/API/test.py " + "Beograd " + "Krusevac " + "Kragujevac " + "Jagodina " + "Niš ";
-                console.log(program)
+            socket.on('getCities', (send_cities) => {
+
+                console.log(send_cities);
                 
-                var child = require('child_process').exec(program)
+                const program = "python C:\\Users\\djordje\\LocalProjects\\Hackaton\\dokazano_bezbedno\\src\\API\\test.py " + send_cities.join(' ');
+                console.log(program);
+                
+                var child = require('child_process').exec(program);
                 const exec = require("child_process").execSync;
                 var result = exec(program);
                 console.log(result.toString("utf8"));
