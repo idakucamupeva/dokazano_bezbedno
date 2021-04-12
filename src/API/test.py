@@ -30,14 +30,13 @@ def scrapSite(searchInput):
         try:
             response = requests.get(url)
             #print("Successful request!")
-            #print(response.text)       # html format
         except (requests.exceptions.MissingSchema, requests.exceptions.ConnectionError):
             print("Unsuccessful request!")
             continue
 
         soup = bs4.BeautifulSoup(response.text, 'html.parser')
 
-        # rb = re.compile(
+        # r = re.compile(
         #    rf"{searchInput}|(\bvanredno stanje\b)|(\bpožar\b)|(\bzemljotres\b)|(\bpoplava\b)|(\brat\b)|(\bepidemija\b)|(\bpandemija\b)|(\bprirodna katastrofa\b)",
         #    flags=re.I | re.X)
         # r = re.compile(rf"^.*?{searchInput}.*?\bvanredno stanje\b.*?\bpožar\b.*?\bzemljotres\b.*?\bpoplava\b.*?\brat\b.*?\bepidemija\b.*?\bpandemija\b.*?\bprirodna katastrofa\b.*?$", flags= re.I | re.X)
@@ -58,12 +57,6 @@ def scrapSite(searchInput):
 
             dangerIndex = dangerIndex + fire * 30 + flood * 50 + war * 100 + virus * 10 + eq * 30
 
-        #print(dangerIndex)
-
-    # requiredWords = r.findall(response.text)
-    # print("\n----->URL: ", url)
-    # for x in requiredWords:
-    #    print(x)
     return dangerIndex
 
 # ------------------------
@@ -74,12 +67,19 @@ if __name__ == "__main__":
 
     allCities = sys.argv[1:]
     allDangerIndices = []
-    for city in  allCities:
-        searchInput = "" + city
+
+    for i in range(len(allCities)):
+        searchInput = "" + allCities[i]
 
         # The only city in Serbia that is translated into English
         if searchInput == "Belgrade":
             searchInput = "Beograd"
+
+        # Case where city has two words in its name
+        index = searchInput.find('_', 0, len(searchInput))
+        if index > 0:
+            searchInput = searchInput[:index] + " " + searchInput[index + 1:]
+            allCities[i] = searchInput  # for output
 
         tmpDangerIndex = scrapSite(searchInput)
         allDangerIndices.append(tmpDangerIndex)
@@ -90,25 +90,22 @@ if __name__ == "__main__":
     srednje = " je prohodan uz dodatni OPREZ"
     uzas = " treba IZBEGAVATI"
     for i in range(len(allDangerIndices)):
-        if(allDangerIndices[i]<50):
+        if (allDangerIndices[i] < 50):
             print("Grad " + allCities[i] + bezbedno + '(' + str(allDangerIndices[i]) + ')')
-        elif(allDangerIndices[i] >= 50 and allDangerIndices[i]<200):
+        elif (allDangerIndices[i] >= 50 and allDangerIndices[i] < 200):
             print("Grad " + allCities[i] + srednje + '(' + str(allDangerIndices[i]) + ')')
         else:
             print("Grad " + allCities[i] + uzas + '(' + str(allDangerIndices[i]) + ')')
 
 
-
-
-
     # Tests
     # cityName = "Pančevo"
-    #cityName = "Beograd"
+    # cityName = "Beograd"
     # cityName = "Novi Sad"
     # cityName = "Niš"
     # cityName = "Vranje"
-    #cityName = "Kragujev"
-    #cityName = "Jagodin"
+    # cityName = "Kragujev"
+    # cityName = "Jagodin"
     # cityName = "Kruševac"
-    #cityName = "Paraćin"
-    #cityName = "Ćuprija"
+    # cityName = "Paraćin"
+    # cityName = "Ćuprija"
