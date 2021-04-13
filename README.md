@@ -13,7 +13,7 @@ This project was done for 2021 hackathon by Fakultet Organizacionih Nauka(FON). 
 
 Prezi presentation(in Serbian): https://prezi.com/p/7wpsge-l6jx2/dokazano-bezbedno/
 
-![demo]()
+![demo](c26a6da441eae0ebcad21bbd628.png)
 
 #### Authors
 -   **Momcilo Knezevic**
